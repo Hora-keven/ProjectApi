@@ -6,6 +6,7 @@ import requests
 from sqlalchemy.dialects.sqlite import insert
 
 
+
 engine = create_engine("sqlite:///Livros.db", echo=True)
 cursor = engine.connect()
 

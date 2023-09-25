@@ -7,14 +7,13 @@ from Models import  LivroBase, Atualiza_livro
 
 app = f.FastAPI()
 
-cursor = LivrosB.cursor
 
-@app.get("/livros", response_model=None, status_code=status.HTTP_201_CREATED)
+@app.get("/livros", response_model=None, status_code=status.HTTP_200_OK)
 async def selecionar() -> dict:
     livros = FuncaoBanco.selecionar_tudo(Livros)
     return livros
 
-@app.get("/livros/{id}")  
+@app.get("/livros/{id}",status_code=status.HTTP_200_OK)  
 def selecionar_livro_id(id) -> dict:
     buscando = FuncaoBanco.selecionar_por_id(id)
     if buscando == "id não encontrado":
@@ -23,18 +22,19 @@ def selecionar_livro_id(id) -> dict:
     return buscando
 
 
-@app.post("/cadastra_livro", tags=['Livro'],status_code=status.HTTP_201_CREATED)
+@app.post("/cadastra_livro" ,status_code=status.HTTP_201_CREATED)
 def cadastrar_livro(livro:LivroBase) -> dict:
     
     livro_dic = {
         'nome_livro':livro.nome_livro,
-        'quantidade_livro':livro.quantidade_livro
+        'quantidade_livro':livro.quantidade_capitulos
     }
+    
     FuncaoBanco.adicionar_dados_banco(livro)
     return livro_dic
 
 
-@app.put("/atualiza_livro/{id}", tags=["Livros"], response_model=None, status_code=status.HTTP_201_CREATED)
+@app.put("/atualiza_livro/{id}", response_model=None, status_code=status.HTTP_201_CREATED)
 async def cadastrar_livro(id:int, atualiza:Atualiza_livro) -> dict:
     selecionado = FuncaoBanco.selecionar_por_id(id)
     atualiza.id = id
@@ -42,7 +42,6 @@ async def cadastrar_livro(id:int, atualiza:Atualiza_livro) -> dict:
     
     if selecionado == f"id não encontrado":
         raise HTTPException(status_code=404, detail="Livro não encontrado com esse id")
-    
     return selecionado
 
 
@@ -50,8 +49,7 @@ async def cadastrar_livro(id:int, atualiza:Atualiza_livro) -> dict:
 async def deletar_livro(id:int) ->  str:
       deletando = FuncaoBanco.deletar_por_id(id)
       if deletando =="id não encontrado":
-            raise HTTPException(status_code=404, detail="Livro não encontrado com esse id")
-      
+            raise HTTPException(status_code=404, detail="Livro não encontrado com esse id") 
       return deletando
 
 if __name__ == '__main__':

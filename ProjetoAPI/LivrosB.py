@@ -14,14 +14,14 @@ class Livros(Base):
     __tablename__ = 'Livros'
     id:Mapped[int] = mapped_column(primary_key=True, nullable=True)
     nome_livro:Mapped[str]=mapped_column(String(100))
-    quantidade_livro:Mapped[int]=mapped_column(Integer)
+    quantidade_capitulos:Mapped[int]=mapped_column(Integer)
     
     
 class FuncaoBanco:
     @staticmethod
     def adicionar_dados_banco(livro:Livros) -> None:
         cursor.execute(insert(Livros),[
-          { 'id':livro.id, 'nome_livro':livro.nome_livro, 'quantidade_livro':livro.quantidade_livro}
+          { 'id':livro.id, 'nome_livro':livro.nome_livro, 'quantidade_capitulos':livro.quantidade_capitulos}
         ])
         cursor.commit()
       
@@ -48,7 +48,7 @@ class FuncaoBanco:
         dados ={
                 "id":dados[0][0],
                 "nome_livro":dados[0][1], 
-                "quantidade_livro":dados[0][2]
+                "quantidade_capitulos":dados[0][2]
                 }
         
         return dados
@@ -66,7 +66,7 @@ class FuncaoBanco:
             return f"{livro.id}"
        
         dados_atualizando = cursor.execute(update(Livros).where(Livros.id == livro.id),
-                [{"nome_livro": livro.nome_livro, "quantidade_livro":livro.quantidade_livro},
+                [{"nome_livro": livro.nome_livro, "quantidade_capitulos":livro.quantidade_capitulos},
         ])
     
         cursor.commit()
@@ -101,7 +101,9 @@ class FuncaoBanco:
         capitulos.append(j[i]['chapters'])
 
       return livros, capitulos
-    
+
+
+
 Base.metadata.create_all(engine) 
 
 

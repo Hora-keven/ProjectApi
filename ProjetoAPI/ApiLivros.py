@@ -1,7 +1,6 @@
 import fastapi as f
 from fastapi import HTTPException, status
 import uvicorn
-import LivrosB
 from LivrosB import FuncaoBanco, Livros
 from Models import  LivroBase, Atualiza_livro
 
@@ -27,7 +26,7 @@ def cadastrar_livro(livro:LivroBase) -> dict:
     
     livro_dic = {
         'nome_livro':livro.nome_livro,
-        'quantidade_livro':livro.quantidade_capitulos
+        'quantidade_capitulos':livro.quantidade_capitulos
     }
     
     FuncaoBanco.adicionar_dados_banco(livro)

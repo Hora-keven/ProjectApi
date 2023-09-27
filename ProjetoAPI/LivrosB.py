@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String, create_engine, update, delete, select
-from sqlalchemy.orm import Mapped,mapped_column,DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column
 from Models import Base, LivroBase
 import json
 import requests
@@ -79,7 +79,7 @@ class FuncaoBanco:
         livros = cursor.execute(select(Livros), [{'nome_livro':Livros.nome_livro}]).fetchall()
         print(livros)
         mensagem = True
-        for i, l in enumerate(livros):
+        for l in livros:
             if id not in l:
                 mensagem = False
 
@@ -88,21 +88,19 @@ class FuncaoBanco:
         
         cursor.execute(delete(Livros).where(Livros.id == id))
         cursor.commit()
-        
         return f"id: {id} deletado com sucesso!"
 
 
     def buscarDados(livros:list, capitulos:list):
+        
       request = requests.get("https://www.abibliadigital.com.br/api/books")
       j = json.loads(request.content)
       
       for i in range(66):
         livros.append(j[i]['name'])
         capitulos.append(j[i]['chapters'])
-
+        
       return livros, capitulos
-
-
 
 Base.metadata.create_all(engine) 
 
